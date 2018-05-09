@@ -219,12 +219,88 @@ namespace iOSControls
                     break;
                 case UICONTROL_NAMES.splitView:
                     Console.WriteLine("Better try again");
+
+
                     break;
                 case UICONTROL_NAMES.textView:
-                    Console.WriteLine("Better try again");
+
+                    UITextView textView = new UITextView();
+                    textView.Frame = new CGRect(25, 100, this.View.Frame.Size.Width - 50, this.View.Frame.Size.Height * 1.5);
+                    textView.Text = "The name India is derived from Indus, which originates from the Old Persian word Hindu.[24] The latter term stems from the Sanskrit word Sindhu, which was the historical local appellation for the Indus River.[25] The ancient Greeks referred to the Indians as Indoi (Ἰνδοί), which translates as The people of the Indus.The geographical term Bharat, which is recognised by the Constitution of India as an official name for the country,[27] is used by many Indian languages in its variations. \n\n It is a modernisation of the historical name Bharatavarsha, which traditionally referred to the Indian subcontinent and gained increasing currency from the mid-19th century as a native name for India.[28][29] \n Scholars believe it to be named after the Vedic tribe of Bhāratas in the second millennium BCE.[30] It is also traditionally associated with the rule of the legendary emperor Bharata.[31] The Hindu text Skanda Purana states that the region was named Bharat after Bharata Chakravartin.Gaṇarājya(literally, people's State) is the Sanskrit/Hindi term for republic dating back to ancient times. Hindustan([ɦɪnd̪ʊˈst̪aːn](About this sound listen)) is a Persian name for India dating back to the 3rd century BCE.It was introduced into India by the Mughals and widely used since then. \n \n Its meaning varied, referring to a region that encompassed northern India and Pakistan or India in its entirety.[28][29][35] Currently, the name may refer to either the northern part of India or the entire country";
+                    textView.ScrollEnabled = true;
+
+                    var attributedText = new NSMutableAttributedString(textView.Text);
+                    attributedText.AddAttribute(UIStringAttributeKey.ForegroundColor, UIColor.Red, new NSRange(0, textView.Text.Length));
+                    textView.AttributedText = attributedText;
+                    this.View.AddSubview(textView);
+
                     break;
                 case UICONTROL_NAMES.viewTransition:
-                    Console.WriteLine("Better try again");
+
+                    UIView view1 = new UIView(frame: new CGRect(25, this.View.Frame.Size.Height / 4, this.View.Frame.Size.Width - 50, this.View.Frame.Size.Height / 6));
+                    view1.BackgroundColor = UIColor.Red;
+                    this.View.AddSubview(view1);
+
+                    UIView view2 = new UIView(frame: new CGRect(25, this.View.Frame.Size.Height / 2, this.View.Frame.Size.Width - 50, this.View.Frame.Size.Height / 6));
+                    view2.BackgroundColor = UIColor.Red;
+                    this.View.AddSubview(view2);
+
+                    UIButton transitionButton = new UIButton(frame: new CoreGraphics.CGRect(25, this.View.Frame.Size.Height / 1.3, this.View.Frame.Size.Width - 50, this.View.Frame.Size.Width / 5));
+                    transitionButton.SetTitle("Show transition", UIControlState.Normal);
+                    transitionButton.BackgroundColor = UIColor.Brown;
+                    transitionButton.TitleLabel.Text = "Show transition";
+
+                    transitionButton.TouchUpInside += delegate
+                    {
+
+                        if (transitionButton.Selected == true)
+                        {
+                            transitionButton.Selected = false;
+                            UIView.Transition(view1, 0.4, UIViewAnimationOptions.TransitionCrossDissolve, null, () =>
+                            {
+                                
+                                view1.BackgroundColor = UIColor.Blue;
+                                view2.BackgroundColor = UIColor.Red;
+                            });
+                        }
+                        else
+                        {
+                            transitionButton.Selected = true;
+
+                            UIView.Transition(view1, 0.4, UIViewAnimationOptions.TransitionCrossDissolve, null, () =>
+                            {
+                                view1.BackgroundColor = UIColor.Red;
+                                view2.BackgroundColor = UIColor.Blue;
+
+                            });
+                        }
+                    };
+
+
+                    //    switch (transitionButton.TitleLabel.Text)
+                    //    {
+                    //        case "Transition Applied, Click to Revert":
+                    //            UIView.Transition(view1, 0.4, UIViewAnimationOptions.TransitionCrossDissolve, null, () =>
+                    //            {
+                    //                view1.BackgroundColor = UIColor.Blue;
+                    //                transitionButton.TitleLabel.Text = "Show transition";
+                    //            });
+
+                    //            break;
+                    //        case "Show transition":
+                    //            UIView.Transition(view1, 0.4, UIViewAnimationOptions.TransitionCrossDissolve, null, () =>
+                    //            {
+                    //                view1.BackgroundColor = UIColor.Red;
+                    //                transitionButton.TitleLabel.Text = "Transition Applied, Click to Revert";
+                    //            });
+                    //            break;
+                    //        default:
+                    //            break;
+                    //    }
+                    //};
+
+                    this.View.AddSubview(transitionButton);
+
                     break;
                 case UICONTROL_NAMES.picker:
                     Console.WriteLine("Better try again");
