@@ -11,9 +11,11 @@ using iOSControls.CollectionViewCells;
 
 namespace iOSControls
 {
-    public partial class ControlShowController : UIViewController, IUITextFieldDelegate, IUITableViewDataSource, IUITableViewDelegate, IUICollectionViewDataSource, IUICollectionViewDelegate
+    public partial class ControlShowController : UIViewController, IUITextFieldDelegate, IUITableViewDataSource, IUITableViewDelegate, IUICollectionViewDataSource, IUICollectionViewDelegate, IUIPickerViewDataSource, IUIPickerViewDelegate
     {
         public string selectedControlName;
+
+        string[] pickerItemsArray;
 
         protected ControlShowController(IntPtr handle) : base(handle)
         {
@@ -35,6 +37,8 @@ namespace iOSControls
         {
             this.showControl(selectedControlName);
             this.controlTitleLabel.Text = selectedControlName;
+
+            pickerItemsArray = new string[]{"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
         }
         public void showControl(string controlName)
         {
@@ -258,7 +262,7 @@ namespace iOSControls
                             transitionButton.Selected = false;
                             UIView.Transition(view1, 0.4, UIViewAnimationOptions.TransitionCrossDissolve, null, () =>
                             {
-                                
+
                                 view1.BackgroundColor = UIColor.Blue;
                                 view2.BackgroundColor = UIColor.Red;
                             });
@@ -275,35 +279,28 @@ namespace iOSControls
                             });
                         }
                     };
-
-
-                    //    switch (transitionButton.TitleLabel.Text)
-                    //    {
-                    //        case "Transition Applied, Click to Revert":
-                    //            UIView.Transition(view1, 0.4, UIViewAnimationOptions.TransitionCrossDissolve, null, () =>
-                    //            {
-                    //                view1.BackgroundColor = UIColor.Blue;
-                    //                transitionButton.TitleLabel.Text = "Show transition";
-                    //            });
-
-                    //            break;
-                    //        case "Show transition":
-                    //            UIView.Transition(view1, 0.4, UIViewAnimationOptions.TransitionCrossDissolve, null, () =>
-                    //            {
-                    //                view1.BackgroundColor = UIColor.Red;
-                    //                transitionButton.TitleLabel.Text = "Transition Applied, Click to Revert";
-                    //            });
-                    //            break;
-                    //        default:
-                    //            break;
-                    //    }
-                    //};
-
                     this.View.AddSubview(transitionButton);
 
                     break;
                 case UICONTROL_NAMES.picker:
-                    Console.WriteLine("Better try again");
+
+                    UILabel valueLabel = new UILabel(frame: new CoreGraphics.CGRect(25, this.View.Frame.Size.Height / 1.3, this.View.Frame.Size.Width - 50, this.View.Frame.Size.Width / 5));
+                    valueLabel.BackgroundColor = UIColor.Brown;
+                    valueLabel.Text = "Show transition";
+
+                    UIPickerView pickerView = new UIPickerView();
+                    pickerView.Frame = new CoreGraphics.CGRect(25, this.View.Frame.Size.Height/3, this.View.Frame.Size.Width - 50, this.View.Frame.Size.Width / 3);
+                    pickerView.DataSource = this;
+                    pickerView.Delegate = this;
+
+
+                    //pickerView.Sele += (sender, e) =>
+                    //{
+                    //    lblValue.Text = pickerView.SelectedValue;
+                    //};
+
+                    this.View.AddSubview(pickerView);
+
                     break;
                 case UICONTROL_NAMES.switches:
                     Console.WriteLine("Better try again");
@@ -426,13 +423,36 @@ namespace iOSControls
             new UIAlertView("Item Touched : " + indexPath.Row.ToString(), "Item Selcted handled", null, "OK", null).Show();
         }
 
+        //UIPIckerView DataSource & Delegate
+        public nint GetComponentCount(UIPickerView pickerView)
+        {
+            return 1;
+        }
+
+        public nint GetRowsInComponent(UIPickerView pickerView, nint component)
+        {
+            return pickerItemsArray.Length;
+        }
+
+        [Export("pickerView:titleForRow:forComponent:")]
+        public string GetTitle(UIPickerView pickerView, nint row, nint component)
+        {
+            return pickerItemsArray[(int) row];  
+        }
+
+        [Export("pickerView:didSelectRow:inComponent:")]
+        public void Selected(UIPickerView pickerView, nint row, nint component)
+        {
+            var selectedItem = pickerItemsArray[(int) row];  
+            new UIAlertView("Item Selected : " + selectedItem.ToString(), "UIPicker Item Selection ", null, "OK", null).Show();
+        }
+  
+
         public override void DidReceiveMemoryWarning()
         {
             base.DidReceiveMemoryWarning();
             // Release any cached data, images, etc that aren't in use.
         }
-
-
     }
 }
 
