@@ -38,7 +38,7 @@ namespace iOSControls
             this.showControl(selectedControlName);
             this.controlTitleLabel.Text = selectedControlName;
 
-            pickerItemsArray = new string[]{"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
+            pickerItemsArray = new string[] { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
         }
         public void showControl(string controlName)
         {
@@ -289,27 +289,92 @@ namespace iOSControls
                     valueLabel.Text = "Show transition";
 
                     UIPickerView pickerView = new UIPickerView();
-                    pickerView.Frame = new CoreGraphics.CGRect(25, this.View.Frame.Size.Height/3, this.View.Frame.Size.Width - 50, this.View.Frame.Size.Width / 3);
+                    pickerView.Frame = new CoreGraphics.CGRect(25, this.View.Frame.Size.Height / 3, this.View.Frame.Size.Width - 50, this.View.Frame.Size.Width / 3);
                     pickerView.DataSource = this;
                     pickerView.Delegate = this;
-
-
-                    //pickerView.Sele += (sender, e) =>
-                    //{
-                    //    lblValue.Text = pickerView.SelectedValue;
-                    //};
-
                     this.View.AddSubview(pickerView);
 
                     break;
                 case UICONTROL_NAMES.switches:
-                    Console.WriteLine("Better try again");
+
+                    UILabel switchStatusLabel = new UILabel(frame: new CoreGraphics.CGRect(25, this.View.Frame.Size.Height / 1.3, this.View.Frame.Size.Width - 50, this.View.Frame.Size.Width / 5));
+                    switchStatusLabel.BackgroundColor = UIColor.Black;
+                    switchStatusLabel.TextAlignment = UITextAlignment.Center;
+                    switchStatusLabel.TextColor = UIColor.White;
+                    switchStatusLabel.Text = "Switch Status";
+                    this.View.AddSubview(switchStatusLabel);
+
+                    UISwitch switchObject = new UISwitch();
+                    switchObject.Frame = new CoreGraphics.CGRect(this.View.Frame.Size.Width / 2, this.View.Frame.Size.Height/3, 10f, 10f);
+                    switchObject.ValueChanged += delegate {
+                        if (switchObject.On)
+                        {
+                            Console.WriteLine("TRUE");
+                            switchStatusLabel.BackgroundColor = UIColor.Green;
+                            switchStatusLabel.Text = "Switch ON";
+                        }
+                        else
+                        {
+                            Console.WriteLine("FALSE");
+                            switchStatusLabel.BackgroundColor = UIColor.Red;
+                            switchStatusLabel.Text = "Switch OFF";
+                        }
+                    };
+                    this.View.AddSubview(switchObject);
+
                     break;
                 case UICONTROL_NAMES.sliders:
-                    Console.WriteLine("Better try again");
+
+                    UILabel sliderStatusLabel = new UILabel(frame: new CoreGraphics.CGRect(25, this.View.Frame.Size.Height / 1.3, this.View.Frame.Size.Width - 50, this.View.Frame.Size.Width / 5));
+                    sliderStatusLabel.TextAlignment = UITextAlignment.Center;
+                    sliderStatusLabel.TextColor = UIColor.White;
+                    sliderStatusLabel.BackgroundColor = UIColor.Blue;
+                    sliderStatusLabel.Text = "Slider Value";
+                    this.View.AddSubview(sliderStatusLabel);
+
+
+                    UISlider slider = new UISlider(frame: new CoreGraphics.CGRect(25, this.View.Frame.Size.Height / 2, this.View.Frame.Size.Width - 50, this.View.Frame.Size.Width / 5));
+                    slider.MinValue = 0;
+                    slider.MaxValue = 100;
+                    slider.MinimumTrackTintColor = UIColor.FromRGB(0xE6, 0x00, 0x06);
+                    slider.ThumbTintColor = UIColor.Red;
+                    slider.MinimumTrackTintColor = UIColor.Orange;
+                    slider.MaximumTrackTintColor = UIColor.Yellow;
+
+                    slider.ValueChanged += delegate {
+
+                        sliderStatusLabel.Text = "Slider Value :"+ slider.Value.ToString();
+       
+                    };
+
+                    this.View.AddSubview(slider);
+
+
                     break;
                 case UICONTROL_NAMES.alerts:
-                    Console.WriteLine("Better try again");
+                    
+                    var alert = UIAlertController.Create("Sample Alert", "Now You are on Visual Studio with Xamarin.iOS", UIAlertControllerStyle.ActionSheet);
+                   
+                    // set up button event handlers
+                    alert.AddAction(UIAlertAction.Create("OK", UIAlertActionStyle.Default, a => taskCompletionSource.SetResult(true)));
+                  alert.AddAction(UIAlertAction.Create("Cancel", UIAlertActionStyle.Default, a => taskCompletionSource.SetResult(false)));
+                    //
+              //      var userClickedOk = await ShowOKCancel(this, "Action Sheet Title", " It is just awesome!");
+                    // go on to use the result in some way      
+
+                    //if (userClickedOk)
+                    //{
+                    //    Console.WriteLine("Clicked on Okay");
+                    //}
+                    //else
+                    //{
+
+                    //    Console.WriteLine("Clicked on Cancel");
+                    //};
+
+
+                    // show it
+                    this.PresentViewController(alert, true, null);
                     break;
 
                 default:
@@ -437,16 +502,16 @@ namespace iOSControls
         [Export("pickerView:titleForRow:forComponent:")]
         public string GetTitle(UIPickerView pickerView, nint row, nint component)
         {
-            return pickerItemsArray[(int) row];  
+            return pickerItemsArray[(int)row];
         }
 
         [Export("pickerView:didSelectRow:inComponent:")]
         public void Selected(UIPickerView pickerView, nint row, nint component)
         {
-            var selectedItem = pickerItemsArray[(int) row];  
+            var selectedItem = pickerItemsArray[(int)row];
             new UIAlertView("Item Selected : " + selectedItem.ToString(), "UIPicker Item Selection ", null, "OK", null).Show();
         }
-  
+
 
         public override void DidReceiveMemoryWarning()
         {
